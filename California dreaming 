@@ -1,0 +1,205 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyOFSlPGC/oEI5C2CuksPIrj",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Omoyeemii/ThinkDSP/blob/master/California%20dreaming%20\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "collapsed": true,
+        "id": "DAKKhlGLvF7Q",
+        "outputId": "a5161b6b-70e4-45c6-a1f8-639fd4dfbb3d"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Requirement already satisfied: numpy in /usr/local/lib/python3.12/dist-packages (2.0.2)\n",
+            "Requirement already satisfied: scipy in /usr/local/lib/python3.12/dist-packages (1.16.3)\n",
+            "Requirement already satisfied: librosa in /usr/local/lib/python3.12/dist-packages (0.11.0)\n",
+            "Requirement already satisfied: soundfile in /usr/local/lib/python3.12/dist-packages (0.13.1)\n",
+            "Requirement already satisfied: audioread>=2.1.9 in /usr/local/lib/python3.12/dist-packages (from librosa) (3.1.0)\n",
+            "Requirement already satisfied: numba>=0.51.0 in /usr/local/lib/python3.12/dist-packages (from librosa) (0.60.0)\n",
+            "Requirement already satisfied: scikit-learn>=1.1.0 in /usr/local/lib/python3.12/dist-packages (from librosa) (1.6.1)\n",
+            "Requirement already satisfied: joblib>=1.0 in /usr/local/lib/python3.12/dist-packages (from librosa) (1.5.2)\n",
+            "Requirement already satisfied: decorator>=4.3.0 in /usr/local/lib/python3.12/dist-packages (from librosa) (4.4.2)\n",
+            "Requirement already satisfied: pooch>=1.1 in /usr/local/lib/python3.12/dist-packages (from librosa) (1.8.2)\n",
+            "Requirement already satisfied: soxr>=0.3.2 in /usr/local/lib/python3.12/dist-packages (from librosa) (1.0.0)\n",
+            "Requirement already satisfied: typing_extensions>=4.1.1 in /usr/local/lib/python3.12/dist-packages (from librosa) (4.15.0)\n",
+            "Requirement already satisfied: lazy_loader>=0.1 in /usr/local/lib/python3.12/dist-packages (from librosa) (0.4)\n",
+            "Requirement already satisfied: msgpack>=1.0 in /usr/local/lib/python3.12/dist-packages (from librosa) (1.1.2)\n",
+            "Requirement already satisfied: cffi>=1.0 in /usr/local/lib/python3.12/dist-packages (from soundfile) (2.0.0)\n",
+            "Requirement already satisfied: pycparser in /usr/local/lib/python3.12/dist-packages (from cffi>=1.0->soundfile) (2.23)\n",
+            "Requirement already satisfied: packaging in /usr/local/lib/python3.12/dist-packages (from lazy_loader>=0.1->librosa) (25.0)\n",
+            "Requirement already satisfied: llvmlite<0.44,>=0.43.0dev0 in /usr/local/lib/python3.12/dist-packages (from numba>=0.51.0->librosa) (0.43.0)\n",
+            "Requirement already satisfied: platformdirs>=2.5.0 in /usr/local/lib/python3.12/dist-packages (from pooch>=1.1->librosa) (4.5.0)\n",
+            "Requirement already satisfied: requests>=2.19.0 in /usr/local/lib/python3.12/dist-packages (from pooch>=1.1->librosa) (2.32.4)\n",
+            "Requirement already satisfied: threadpoolctl>=3.1.0 in /usr/local/lib/python3.12/dist-packages (from scikit-learn>=1.1.0->librosa) (3.6.0)\n",
+            "Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests>=2.19.0->pooch>=1.1->librosa) (3.4.4)\n",
+            "Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests>=2.19.0->pooch>=1.1->librosa) (3.11)\n",
+            "Requirement already satisfied: urllib3<3,>=1.21.1 in /usr/local/lib/python3.12/dist-packages (from requests>=2.19.0->pooch>=1.1->librosa) (2.5.0)\n",
+            "Requirement already satisfied: certifi>=2017.4.17 in /usr/local/lib/python3.12/dist-packages (from requests>=2.19.0->pooch>=1.1->librosa) (2025.11.12)\n"
+          ]
+        }
+      ],
+      "source": [
+        "!pip install numpy scipy librosa soundfile"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import librosa\n",
+        "import numpy as np\n",
+        "import soundfile as sf\n",
+        "\n",
+        "audio, sr = librosa.load(\"c.wav\", sr=None)\n",
+        "\n",
+        "print(\"Audio loaded!\")\n",
+        "print(\"Sample rate:\", sr)\n",
+        "print(\"Length (seconds):\", len(audio)/sr)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "3LGnm02wvRai",
+        "outputId": "bb9f9344-11ef-4519-c8fd-457595b66daf"
+      },
+      "execution_count": 2,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Audio loaded!\n",
+            "Sample rate: 44100\n",
+            "Length (seconds): 164.88489795918366\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "\n",
+        "from scipy.signal import butter, lfilter\n",
+        "\n",
+        "def butter_filter(audio, cutoff, sr, btype, order=5):\n",
+        "    nyquist = 0.5 * sr\n",
+        "    norm_cutoff = cutoff / nyquist\n",
+        "    b, a = butter(order, norm_cutoff, btype=btype)\n",
+        "    return lfilter(b, a, audio)\n",
+        "\n",
+        "def bass_boost(audio, sr, gain=3):\n",
+        "    bass = butter_filter(audio, cutoff=200, sr=sr, btype='low')\n",
+        "    return audio + gain * bass\n",
+        "\n",
+        "def treble_boost(audio, sr, gain=3):\n",
+        "    treble = butter_filter(audio, cutoff=3000, sr=sr, btype='high')\n",
+        "    return audio + gain * treble"
+      ],
+      "metadata": {
+        "id": "ouJHmXwbwBMv"
+      },
+      "execution_count": 3,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "bass_audio = bass_boost(audio, sr, gain=4)\n",
+        "sf.write(\"bass_boost.wav\", bass_audio, sr)\n",
+        "\n",
+        "print(\"Bass boost done! File saved as bass_boost.wav\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "IeghixkBwCOS",
+        "outputId": "3238305d-eacd-421a-dc6c-1bf9fdef912e"
+      },
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Bass boost done! File saved as bass_boost.wav\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "treble_audio = treble_boost(audio, sr, gain=4)\n",
+        "sf.write(\"treble_boost.wav\", treble_audio, sr)\n",
+        "\n",
+        "print(\"Treble boost done! File saved as treble_boost.wav\")"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "24kYL9TFvw-y",
+        "outputId": "e6cb7645-f3b7-49c6-9485-8a6e4bd6562d"
+      },
+      "execution_count": 5,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Treble boost done! File saved as treble_boost.wav\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "kvG_E4OGvu2p"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [],
+      "metadata": {
+        "id": "KsjIJfxfveA1"
+      }
+    }
+  ]
+}
